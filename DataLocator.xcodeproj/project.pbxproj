@@ -9,10 +9,11 @@
 /* Begin PBXBuildFile section */
 		BE06AB4C2C83724A00B40463 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06AB4B2C83724A00B40463 /* AppDelegate.swift */; };
 		BE06AB4E2C83724A00B40463 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06AB4D2C83724A00B40463 /* SceneDelegate.swift */; };
-		BE06AB502C83724A00B40463 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06AB4F2C83724A00B40463 /* ViewController.swift */; };
 		BE06AB532C83724A00B40463 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = BE06AB522C83724A00B40463 /* Base */; };
 		BE06AB552C83724D00B40463 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE06AB542C83724D00B40463 /* Assets.xcassets */; };
 		BE06AB582C83724D00B40463 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = BE06AB572C83724D00B40463 /* Base */; };
+		BE0980842C88B56900C02FC3 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0980832C88B56900C02FC3 /* NetworkManager.swift */; };
+		BE0980882C88C2BA00C02FC3 /* LocationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0980872C88C2BA00C02FC3 /* LocationTableViewController.swift */; };
 		BE2FC75B2C837474006290F2 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2FC75A2C837474006290F2 /* Location.swift */; };
 /* End PBXBuildFile section */
 
@@ -20,11 +21,12 @@
 		BE06AB482C83724A00B40463 /* DataLocator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DataLocator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE06AB4B2C83724A00B40463 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BE06AB4D2C83724A00B40463 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		BE06AB4F2C83724A00B40463 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		BE06AB522C83724A00B40463 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BE06AB542C83724D00B40463 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BE06AB572C83724D00B40463 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BE06AB592C83724D00B40463 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BE0980832C88B56900C02FC3 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		BE0980872C88C2BA00C02FC3 /* LocationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTableViewController.swift; sourceTree = "<group>"; };
 		BE2FC75A2C837474006290F2 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -58,9 +60,10 @@
 		BE06AB4A2C83724A00B40463 /* DataLocator */ = {
 			isa = PBXGroup;
 			children = (
-				BE06AB602C83738300B40463 /* ViewControllers */,
 				BE06AB612C83738F00B40463 /* StoryBoards */,
+				BE06AB602C83738300B40463 /* ViewControllers */,
 				BE2FC7592C83745B006290F2 /* Models */,
+				BE0980822C88B54700C02FC3 /* Services */,
 				BE06AB5F2C83737900B40463 /* App */,
 				BE06AB622C83739900B40463 /* Resources */,
 			);
@@ -80,7 +83,7 @@
 		BE06AB602C83738300B40463 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				BE06AB4F2C83724A00B40463 /* ViewController.swift */,
+				BE0980872C88C2BA00C02FC3 /* LocationTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -100,6 +103,14 @@
 				BE06AB542C83724D00B40463 /* Assets.xcassets */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		BE0980822C88B54700C02FC3 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BE0980832C88B56900C02FC3 /* NetworkManager.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		BE2FC7592C83745B006290F2 /* Models */ = {
@@ -181,8 +192,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE06AB502C83724A00B40463 /* ViewController.swift in Sources */,
 				BE06AB4C2C83724A00B40463 /* AppDelegate.swift in Sources */,
+				BE0980882C88C2BA00C02FC3 /* LocationTableViewController.swift in Sources */,
+				BE0980842C88B56900C02FC3 /* NetworkManager.swift in Sources */,
 				BE2FC75B2C837474006290F2 /* Location.swift in Sources */,
 				BE06AB4E2C83724A00B40463 /* SceneDelegate.swift in Sources */,
 			);
