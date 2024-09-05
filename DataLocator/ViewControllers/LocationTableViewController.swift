@@ -9,26 +9,38 @@ import UIKit
 
 class LocationTableViewController: UITableViewController {
     
+    // MARK: - IB Outlets
+    @IBOutlet weak var locationRefreshAction: UIRefreshControl!
+    
     // MARK: - Private Properties
     private var locations: [Location] = []
-    
     private let networkManager = NetworkManager.shared
     private let url = URL(string: "https://ipapi.co/json/")!
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
+    private let loadingView = UIView()
+    private var isRefreshingData = false
+    
     private let sectionTitles = [
-            "IP", "Network", "Version", "City", "Region", "Region Code",
-            "Country", "Country Name", "Country Code", "Country Code ISO 3",
-            "Country Capital", "Country TLD", "Continent Code", "In EU",
-            "Postal", "Latitude", "Longitude", "Timezone", "UTC Offset",
-            "Country Calling Code", "Currency", "Currency Name", "Languages",
-            "Country Area", "Country Population", "ASN", "Internet Service Provider"
-        ]
-
+        "IP", "Network", "Version", "City", "Region", "Region Code",
+        "Country", "Country Name", "Country Code", "Country Code ISO 3",
+        "Country Capital", "Country TLD", "Continent Code", "In EU",
+        "Postal", "Latitude", "Longitude", "Timezone", "UTC Offset",
+        "Country Calling Code", "Currency", "Currency Name", "Languages",
+        "Country Area", "Country Population", "ASN", "Internet Service Provider"
+    ]
+    
+    
+    
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureActivityIndicator()
+        configureRefreshControl()
         fetchData()
+        
+        tableView.isHidden = true
     }
-
+    
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
         sectionTitles.count
@@ -41,13 +53,13 @@ class LocationTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         1
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let location = locations.first
         
         var content = cell.defaultContentConfiguration()
-
+        
         switch indexPath.section {
         case 0:
             content.text = location?.ip
@@ -125,19 +137,60 @@ class LocationTableViewController: UITableViewController {
         
         return cell
     }
+    
+    // MARK: - Private Methods
+    private func configureActivityIndicator() {
+        loadingView.frame = view.bounds
+        loadingView.isHidden = true
+        
+        activityIndicator.center = loadingView.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = .gray
+        
+        loadingView.addSubview(activityIndicator)
+        navigationController?.view.addSubview(loadingView)
+    }
+    
+    private func showLoadingView() {
+        loadingView.isHidden = false
+        activityIndicator.startAnimating()
+    }
+    
+    private func hideLoadingView() {
+        loadingView.isHidden = true
+        activityIndicator.stopAnimating()
+    }
+    
+    private func configureRefreshControl() {
+        locationRefreshAction.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
+    }
+    
+    @objc private func refreshData(_ sender: Any) {
+        isRefreshingData = true
+        fetchData()
+    }
 }
 
 // MARK: - Networking
 extension LocationTableViewController {
-    func fetchData() {
-        networkManager.fetch(Location.self, from: url) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let locations):
-                self.locations = [locations]
-                tableView.reloadData()
-            case .failure(let error):
-                print(error)
+    private func fetchData() {
+        if !isRefreshingData {
+            showLoadingView()
+        }
+        
+        networkManager.fetch(Location.self, from: url) { result in
+            DispatchQueue.main.async {
+                self.hideLoadingView()
+                switch result {
+                case .success(let location):
+                    self.locations = [location]
+                    self.tableView.reloadData()
+                    self.tableView.isHidden = false
+                    self.locationRefreshAction.endRefreshing()
+                case .failure(let error):
+                    print(error)
+                    self.locationRefreshAction.endRefreshing()
+                }
             }
         }
     }
