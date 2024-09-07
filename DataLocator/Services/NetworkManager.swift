@@ -16,7 +16,7 @@ final class NetworkManager {
     
     private init() {}
     
-    func fetch<T: Decodable>(_ type: T.Type, from url: URL, completion: @escaping(Result<T, NetworkError>) -> Void) {
+    func fetchData(from url: URL, completion: @escaping (Result<Location, NetworkError>) -> Void) {
         URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data else {
                 print(error ?? "No error description")
@@ -27,7 +27,7 @@ final class NetworkManager {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 
-                let dataModel = try decoder.decode(T.self, from: data)
+                let dataModel = try decoder.decode(Location.self, from: data)
                 DispatchQueue.main.async {
                     completion(.success(dataModel))
                 }

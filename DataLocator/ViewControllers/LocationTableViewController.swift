@@ -14,22 +14,13 @@ class LocationTableViewController: UITableViewController {
     
     // MARK: - Private Properties
     private var locations: [Location] = []
+    private var isRefreshingData = false
+    
+    private let sectionTitles = LocationData.sectionTitles
     private let networkManager = NetworkManager.shared
     private let url = URL(string: "https://ipapi.co/json/")!
     private let activityIndicator = UIActivityIndicatorView(style: .large)
     private let loadingView = UIView()
-    private var isRefreshingData = false
-    
-    private let sectionTitles = [
-        "IP", "Network", "Version", "City", "Region", "Region Code",
-        "Country", "Country Name", "Country Code", "Country Code ISO 3",
-        "Country Capital", "Country TLD", "Continent Code", "In EU",
-        "Postal", "Latitude", "Longitude", "Timezone", "UTC Offset",
-        "Country Calling Code", "Currency", "Currency Name", "Languages",
-        "Country Area", "Country Population", "ASN", "Internet Service Provider"
-    ]
-    
-    
     
     // MARK: - View Life Cycles
     override func viewDidLoad() {
@@ -57,88 +48,62 @@ class LocationTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let location = locations.first
+        let locationDetails: [String?] = [
+            location?.ip,
+            location?.network,
+            location?.version,
+            location?.city,
+            location?.region,
+            location?.regionCode,
+            location?.country,
+            location?.countryName,
+            location?.countryCode,
+            location?.countryCodeIso3,
+            location?.countryCapital,
+            location?.countryTld,
+            location?.continentCode,
+            location?.inEu != nil ? (location!.inEu ? "Yes" : "No") : "N/A",
+            location?.postal,
+            formatCoordinate(location?.latitude),
+            formatCoordinate(location?.longitude),
+            location?.timezone,
+            location?.utcOffset,
+            location?.countryCallingCode,
+            location?.currency,
+            location?.currencyName,
+            formatLanguages(location?.languages),
+            formatNumber(location?.countryArea, unit: "м²"),
+            formatNumber(location?.countryPopulation, unit: "people"),
+            location?.asn,
+            location?.org
+        ]
         
         var content = cell.defaultContentConfiguration()
         
-        switch indexPath.section {
-        case 0:
-            content.text = location?.ip
-        case 1:
-            content.text = location?.network
-        case 2:
-            content.text = location?.version
-        case 3:
-            content.text = location?.city
-        case 4:
-            content.text = location?.region
-        case 5:
-            content.text = location?.regionCode
-        case 6:
-            content.text = location?.country
-        case 7:
-            content.text = location?.countryName
-        case 8:
-            content.text = location?.countryCode
-        case 9:
-            content.text = location?.countryCodeIso3
-        case 10:
-            content.text = location?.countryCapital
-        case 11:
-            content.text = location?.countryTld
-        case 12:
-            content.text = location?.continentCode
-        case 13:
-            content.text = location!.inEu ? "Yes" : "No"
-        case 14:
-            content.text = location?.postal
-        case 15:
-            content.text = "\(location?.latitude ?? 0.0)"
-        case 16:
-            content.text = "\(location?.longitude ?? 0.0)"
-        case 17:
-            content.text = location?.timezone
-        case 18:
-            content.text = location?.utcOffset
-        case 19:
-            content.text = location?.countryCallingCode
-        case 20:
-            content.text = location?.currency
-        case 21:
-            content.text = location?.currencyName
-        case 22:
-            if let languages = location?.languages {
-                content.text = languages.replacingOccurrences(of: ",", with: ", ")
-            } else {
-                content.text = nil
-            }
-        case 23:
-            if let countryArea = location?.countryArea {
-                let numberFormatter = NumberFormatter()
-                numberFormatter.numberStyle = .decimal
-                content.text = "\(numberFormatter.string(from: NSNumber(value: countryArea)) ?? "0") м²"
-            } else {
-                content.text = "0 м²"
-            }
-        case 24:
-            if let population = location?.countryPopulation {
-                let numberFormatter = NumberFormatter()
-                numberFormatter.numberStyle = .decimal
-                content.text = "\(numberFormatter.string(from: NSNumber(value: population)) ?? "0") people"
-            } else {
-                content.text = "0 people"
-            }
-        case 25:
-            content.text = location?.asn
-        default:
-            content.text = location?.org
-        }
-        
+        content.text = locationDetails[indexPath.section]
         cell.contentConfiguration = content
         
         return cell
     }
     
     // MARK: - Private Methods
+    private func formatCoordinate(_ coordinate: Double?) -> String {
+        guard let coordinate = coordinate else { return "0.0" }
+        return String(format: "%.4f", coordinate)
+    }
+    
+    private func formatNumber(_ number: Int?, unit: String) -> String {
+        guard let number = number else { return "0 \(unit)" }
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        return "\(numberFormatter.string(from: NSNumber(value: number)) ?? "0") \(unit)"
+    }
+    
+    private func formatLanguages(_ languages: String?) -> String {
+        return languages?.replacingOccurrences(of: ",", with: ", ") ?? ""
+    }
+    
     private func configureActivityIndicator() {
         loadingView.frame = view.bounds
         loadingView.isHidden = true
@@ -178,19 +143,17 @@ extension LocationTableViewController {
             showLoadingView()
         }
         
-        networkManager.fetch(Location.self, from: url) { result in
-            DispatchQueue.main.async {
-                self.hideLoadingView()
-                switch result {
-                case .success(let location):
-                    self.locations = [location]
-                    self.tableView.reloadData()
-                    self.tableView.isHidden = false
-                    self.locationRefreshAction.endRefreshing()
-                case .failure(let error):
-                    print(error)
-                    self.locationRefreshAction.endRefreshing()
-                }
+        networkManager.fetchData(from: url) { result in
+            self.hideLoadingView()
+            switch result {
+            case .success(let location):
+                self.locations = [location]
+                self.tableView.reloadData()
+                self.tableView.isHidden = false
+                self.locationRefreshAction.endRefreshing()
+            case .failure(let error):
+                print(error)
+                self.locationRefreshAction.endRefreshing()
             }
         }
     }

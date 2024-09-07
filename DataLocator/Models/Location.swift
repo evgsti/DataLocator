@@ -34,3 +34,14 @@ struct Location: Decodable {
     let asn: String
     let org: String
 }
+
+struct LocationData {
+    static let sectionTitles = [
+        "IP", "Network", "Version", "City", "Region", "Region Code",
+        "Country", "Country Name", "Country Code", "Country Code ISO 3",
+        "Country Capital", "Country TLD", "Continent Code", "In EU",
+        "Postal", "Latitude", "Longitude", "Timezone", "UTC Offset",
+        "Country Calling Code", "Currency", "Currency Name", "Languages",
+        "Country Area", "Country Population", "ASN", "Internet Service Provider"
+    ]
+}
