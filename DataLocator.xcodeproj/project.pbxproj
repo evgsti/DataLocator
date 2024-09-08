@@ -14,6 +14,7 @@
 		BE06AB582C83724D00B40463 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = BE06AB572C83724D00B40463 /* Base */; };
 		BE0980842C88B56900C02FC3 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0980832C88B56900C02FC3 /* NetworkManager.swift */; };
 		BE0980882C88C2BA00C02FC3 /* LocationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0980872C88C2BA00C02FC3 /* LocationTableViewController.swift */; };
+		BE20C23B2C8CCB500085B1D4 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = BE20C23A2C8CCB500085B1D4 /* Alamofire */; };
 		BE2FC75B2C837474006290F2 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2FC75A2C837474006290F2 /* Location.swift */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE20C23B2C8CCB500085B1D4 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,6 +139,9 @@
 			dependencies = (
 			);
 			name = DataLocator;
+			packageProductDependencies = (
+				BE20C23A2C8CCB500085B1D4 /* Alamofire */,
+			);
 			productName = DataLocator;
 			productReference = BE06AB482C83724A00B40463 /* DataLocator.app */;
 			productType = "com.apple.product-type.application";
@@ -165,6 +170,9 @@
 				Base,
 			);
 			mainGroup = BE06AB3F2C83724A00B40463;
+			packageReferences = (
+				BE20C2392C8CCB500085B1D4 /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			productRefGroup = BE06AB492C83724A00B40463 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -429,6 +437,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BE20C2392C8CCB500085B1D4 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = exactVersion;
+				version = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BE20C23A2C8CCB500085B1D4 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE20C2392C8CCB500085B1D4 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BE06AB402C83724A00B40463 /* Project object */;
 }

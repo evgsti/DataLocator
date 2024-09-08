@@ -18,8 +18,9 @@ class LocationTableViewController: UITableViewController {
     
     private let sectionTitles = LocationData.sectionTitles
     private let networkManager = NetworkManager.shared
+    
     private let url = URL(string: "https://ipapi.co/json/")!
-    private let activityIndicator = UIActivityIndicatorView(style: .large)
+    private let activityIndicator = UIActivityIndicatorView()
     private let loadingView = UIView()
     
     // MARK: - View Life Cycles
@@ -111,6 +112,7 @@ class LocationTableViewController: UITableViewController {
         activityIndicator.center = loadingView.center
         activityIndicator.hidesWhenStopped = true
         activityIndicator.color = .gray
+        activityIndicator.style = .large
         
         loadingView.addSubview(activityIndicator)
         navigationController?.view.addSubview(loadingView)
@@ -143,17 +145,16 @@ extension LocationTableViewController {
             showLoadingView()
         }
         
-        networkManager.fetchData(from: url) { result in
+        networkManager.fetchData(url: url) { [unowned self] result in
             self.hideLoadingView()
             switch result {
             case .success(let location):
                 self.locations = [location]
-                self.tableView.reloadData()
                 self.tableView.isHidden = false
                 self.locationRefreshAction.endRefreshing()
+                self.tableView.reloadData()
             case .failure(let error):
                 print(error)
-                self.locationRefreshAction.endRefreshing()
             }
         }
     }

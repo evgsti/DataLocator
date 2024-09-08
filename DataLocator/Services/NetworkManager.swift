@@ -6,35 +6,24 @@
 //
 
 import Foundation
-
-enum NetworkError: Error {
-    case decodingError
-}
+import Alamofire
 
 final class NetworkManager {
     static let shared = NetworkManager()
     
     private init() {}
     
-    func fetchData(from url: URL, completion: @escaping (Result<Location, NetworkError>) -> Void) {
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            guard let data else {
-                print(error ?? "No error description")
-                return
-            }
-            
-            do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                
-                let dataModel = try decoder.decode(Location.self, from: data)
-                DispatchQueue.main.async {
-                    completion(.success(dataModel))
+    func fetchData(url: URL, completion: @escaping (Result<Location, Error>) -> Void) {
+        AF.request(url)
+            .validate()
+            .responseJSON { response in
+                switch response.result {
+                case .success(let data):
+                    let location = Location.getLocation(from: data)
+                    completion(.success(location))
+                case .failure(let error):
+                    completion(.failure(error))
                 }
-            } catch {
-                completion(.failure(.decodingError))
             }
-            
-        }.resume()
     }
 }
