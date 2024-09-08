@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LocationTableViewController: UITableViewController {
+final class LocationTableViewController: UITableViewController {
     
     // MARK: - IB Outlets
     @IBOutlet weak var locationRefreshAction: UIRefreshControl!
